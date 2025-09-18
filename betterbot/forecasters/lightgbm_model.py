@@ -43,12 +43,23 @@ class LightGBMForecaster:
         """Fit the model on the supplied dataset."""
 
         LOGGER.info("Training LightGBM model on %s samples", len(features))
-        fit_params: dict[str, Any] = {}
-        if eval_set:
-            fit_params["eval_set"] = eval_set
-            fit_params["eval_metric"] = "auc"
-            fit_params["early_stopping_rounds"] = 20
-        self.model.fit(features, targets, **fit_params)
+        if not eval_set:
+            self.model.fit(features, targets)
+            return
+
+        fit_params: dict[str, Any] = {
+            "eval_set": eval_set,
+            "eval_metric": "auc",
+        }
+
+        try:
+            self.model.fit(features, targets, early_stopping_rounds=20, **fit_params)
+        except TypeError:
+            # LightGBM >=4.0 expects callbacks instead of early_stopping_rounds
+            callbacks = fit_params.pop("callbacks", [])
+            callbacks.append(lgb.early_stopping(20, verbose=False))
+            fit_params["callbacks"] = callbacks
+            self.model.fit(features, targets, **fit_params)
 
     def predict(self, features: np.ndarray) -> np.ndarray:
         """Return predicted class labels (0 = flat, 1 = long)."""

@@ -10,10 +10,10 @@ import pandas as pd
 
 try:  # pragma: no cover - dependency resolution
     import gymnasium as gym
-except ImportError:  # pragma: no cover    
+    from gymnasium import spaces
+except ImportError:  # pragma: no cover
     import gym  # type: ignore
-
-from gym import spaces
+    from gym import spaces  # type: ignore
 
 LOGGER = logging.getLogger(__name__)
 
