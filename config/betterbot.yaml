@@ -1,0 +1,49 @@
+bitvavo:
+  api_key: ""
+  api_secret: ""
+  base_url: "https://api.bitvavo.com/v2"
+  market: "BTC-EUR"
+  request_timeout: 10
+
+trading:
+  mode: "paper"
+  asset: "BTC"
+  quote: "EUR"
+  initial_cash: 500.0
+  refresh_interval: 60
+  max_position_size: 1.0
+  model_expiry_hours: 24
+  regime_vol_threshold: 0.03
+
+paths:
+  registry_root: "models"
+  logs_dir: "logs"
+  checkpoints_dir: "checkpoints"
+
+ppo:
+  timesteps: 50000
+  learning_rate: 0.0003
+  batch_size: 256
+  gamma: 0.99
+  gae_lambda: 0.95
+
+reporting:
+  enable_telegram: false
+  telegram_chat_id: ""
+
+telegram:
+  bot_token: ""
+  chat_id: ""
+
+backup:
+  target: ""
+  rsync_flags:
+    - "-avz"
+    - "--delete"
+
+shadow_backtest:
+  lookback_days: 7
+  benchmark: "buy_and_hold"
+
+logging:
+  level: "INFO"
